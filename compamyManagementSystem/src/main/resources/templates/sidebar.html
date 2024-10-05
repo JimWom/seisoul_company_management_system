@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="sidebar">
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">請求書管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">請求書一覧</a></dd>
+                        <dd><a href="/upload-invoice">請求書登録</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">ビジネスパートナー</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">BP一覧</a></dd>
+                        <dd><a href="javascript:;">BP登録</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">財務管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">収支一覧</a></dd>
+                        <dd><a href="javascript:;">支出登録</a></dd>
+                        <dd><a href="javascript:;">収入登録</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">社員管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">社員一覧</a></dd>
+                        <dd><a href="javascript:;">社員登録</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+</th:block>
+</html>

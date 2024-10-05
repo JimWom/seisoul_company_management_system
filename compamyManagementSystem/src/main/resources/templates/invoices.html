@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>会社管理システム</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+    <script>
+        layui.use(['laydate', 'table'], function(){
+            var laydate = layui.laydate;
+            var table = layui.table;
+
+            // 年选择器
+            laydate.render({
+                elem: '#ID-laydate-type-year',
+                type: 'year'
+            });
+
+            // 年月选择器
+            laydate.render({
+                elem: '#ID-laydate-type-month-send',
+                type: 'month'
+            });
+
+            // 年月选择器
+            laydate.render({
+                elem: '#ID-laydate-type-month-work',
+                type: 'month'
+            });
+        });
+    </script>
+    <style>
+        /* Ensure form labels do not wrap and maintain a fixed width */
+        .layui-form-label {
+            width: 150px; /* Set a fixed width for labels */
+            text-align: right;
+            white-space: nowrap; /* Prevent text wrapping */
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Make sure inputs and selects take the proper width */
+        .layui-input-inline {
+            width: 200px; /* Set a standard width for inputs and selects */
+        }
+
+        /* Maintain spacing between form items */
+        .layui-form-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Container to align two form items on the same row */
+        .layui-row-two-items {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Space between columns */
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="~{header :: header(pageTitle=${pageTitle})}" th:with="pageTitle=${pageTitle}"></div>
+
+    <div th:replace="~{sidebar :: sidebar}"></div>
+
+    <div class="layui-body">
+        <blockquote class="layui-elem-quote layui-quote-nm" style="font-weight: bolder;font-size: larger">
+            検索条件
+        </blockquote>
+        <div class="layui-collapse">
+            <div class="layui-colla-item">
+
+                <br>
+                <h3 style="margin-left: 8px"></h3>
+                <br>
+                <!-- 請求書一覧部分-->
+                <form class="layui-form layui-row layui-col-space16">
+                    <!-- First Row: Single Item -->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">年分内一覧</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="ID-laydate-type-year" placeholder="yyyy"/>
+                        </div>
+                    </div>
+
+                    <!-- Second Row: Two Items Aligned Horizontally -->
+                    <div class="layui-form-item layui-row-flex">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求書の作成年月</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="ID-laydate-type-month-send" placeholder="yyyy-MM">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求中作業発生年月</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="ID-laydate-type-month-work" placeholder="yyyy-MM">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Third Row: Two Items Aligned Horizontally -->
+                    <div class="layui-form-item layui-row-flex">
+                        <!-- 請求発出方 -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求の発出方</label>
+                            <div class="layui-input-inline">
+                                <select>
+                                    <option value="">请选择</option>
+                                    <option value="AAA">选项 A</option>
+                                    <option value="BBB">选项 B</option>
+                                    <option value="CCC">选项 C</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- 請求受けて支払い方 -->
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求の支払方</label>
+                            <div class="layui-input-inline">
+                                <select>
+                                    <option value="">请选择</option>
+                                    <option value="AAA">选项 A</option>
+                                    <option value="BBB">选项 B</option>
+                                    <option value="CCC">选项 C</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline" style="font-size: smaller">
+                            (ターゲット会社見つからない場合はBP画面に登録してください）
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="button" class="layui-btn layui-btn-fluid">検　　索</button>
+                    </div>
+                </form>
+
+
+
+                <div class="layui-collapse">
+                    <div class="layui-colla-item">
+                        <br>
+                        <h3 style="margin-left: 8px"></h3>
+                        <br>
+                        <!-- 表格 -->
+                        <table class="layui-table">
+                            <thead>
+                            <tr>
+                                <th>年分内一覧</th>
+                                <th>請求書の作成年月</th>
+                                <th>請求中作業発生年月</th>
+                                <th>請求の発出方</th>
+                                <th>請求の支払方</th>
+                                <th>請求書の確認</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 遍历 rows 中的数据 -->
+                            <tr th:each="row : ${rows}">
+                                <td th:text="${row.year}">年分内一覧</td>
+                                <td th:text="${row.createMonth}">請求書の作成年月</td>
+                                <td th:text="${row.workMonth}">請求中作業発生年月</td>
+                                <td th:text="${row.sender}">請求の発出方</td>
+                                <td th:text="${row.receiver}">請求の支払方</td>
+                                <td><a th:href="@{/newPageUrl}" target="_blank" style="color: blue; text-decoration: underline;">請求書確認</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

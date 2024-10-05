@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="header">
+  <div class="layui-header" style="background-color: #2a8edd">
+    <div class="layui-logo layui-hide-xs layui-bg-black layui-font-20">正創株式会社</div>
+
+    <!-- 头部区域（可配合layui 已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+      <!-- 移动端显示 -->
+      <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+        <i class="layui-icon layui-icon-spread-left"></i>
+      </li>
+      <li class="layui-nav-item"><span style="font-size: larger;font-weight: bolder" th:text="${pageTitle}"></span></li>
+    </ul>
+
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+        <a href="javascript:;">
+          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
+          tester
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="javascript:;">Your Profile</a></dd>
+          <dd><a href="javascript:;">Settings</a></dd>
+          <dd><a href="javascript:;">Sign out</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more-vertical"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+</th:block>

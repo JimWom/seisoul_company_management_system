@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>登录页面</title>
+  <style>
+    body {
+      background-image: url('/img/backgroundPage.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-form {
+      background-color: rgba(255, 255, 255, 0.8); /* 半透明白色 */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      text-align: center;
+    }
+    .login-form input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .login-form button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    .login-form button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="login-form">
+  <h2>正創株式会社 管理システム</h2>
+  <form>
+    <input type="text" placeholder="ユーザー名">
+    <input type="password" placeholder="パスワード">
+    <button type="submit">ログイン</button>
+  </form>
+</div>
+</body>
+</html>
