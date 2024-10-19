@@ -9,9 +9,9 @@
     <link href="/layui/css/layui.css" rel="stylesheet">
     <script src="/layui/layui.js"></script>
     <script>
-        layui.use(['laydate', 'table'], function(){
+        layui.use(['laydate', 'table', 'form'], function(){
             var laydate = layui.laydate;
-            var table = layui.table;
+            var form = layui.form;
 
             // 年选择器
             laydate.render({
@@ -25,40 +25,83 @@
                 type: 'month'
             });
 
-            // 年月选择器
             laydate.render({
                 elem: '#ID-laydate-type-month-work',
                 type: 'month'
             });
+
+            // 渲染复选框
+            form.render('checkbox');
         });
+
+        // 确保DOM内容加载完成后运行JS逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            var selectAllCheckbox = document.getElementById('select-all');
+            var rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+            // 全选复选框点击事件
+            selectAllCheckbox.addEventListener('change', function() {
+                var isChecked = selectAllCheckbox.checked;
+                rowCheckboxes.forEach(function(checkbox) {
+                    checkbox.checked = isChecked;  // 同步每行复选框的状态
+                });
+            });
+
+            // 每个行复选框的状态改变时
+            rowCheckboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    // 如果有任意一个复选框未选中，取消全选状态
+                    if (!checkbox.checked) {
+                        selectAllCheckbox.checked = false;
+                    }
+
+                    // 如果所有行复选框都被选中，全选复选框也选中
+                    if (document.querySelectorAll('.row-checkbox:checked').length === rowCheckboxes.length) {
+                        selectAllCheckbox.checked = true;
+                    }
+                });
+            });
+        });
+
+        // 批量下载选中的文件
+        function downloadSelected() {
+            var selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('请选择至少一个文件进行下载');
+                return;
+            }
+            alert('文件下载');
+            selectedCheckboxes.forEach(function(checkbox) {
+                var pdfUrl = checkbox.getAttribute('data-pdf-url');
+                console.log('Downloading:', pdfUrl);
+                // 调用下载逻辑，例如：
+                // window.open(pdfUrl, '_blank');
+            });
+        }
     </script>
     <style>
-        /* Ensure form labels do not wrap and maintain a fixed width */
         .layui-form-label {
-            width: 150px; /* Set a fixed width for labels */
+            width: 150px;
             text-align: right;
-            white-space: nowrap; /* Prevent text wrapping */
+            white-space: nowrap;
             padding-right: 10px;
             box-sizing: border-box;
         }
 
-        /* Make sure inputs and selects take the proper width */
         .layui-input-inline {
-            width: 200px; /* Set a standard width for inputs and selects */
+            width: 200px;
         }
 
-        /* Maintain spacing between form items */
         .layui-form-item {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
         }
 
-        /* Container to align two form items on the same row */
         .layui-row-two-items {
             display: flex;
             justify-content: space-between;
-            gap: 20px; /* Space between columns */
+            gap: 20px;
         }
     </style>
 </head>
@@ -80,7 +123,6 @@
                 <br>
                 <!-- 請求書一覧部分-->
                 <form class="layui-form layui-row layui-col-space16">
-                    <!-- First Row: Single Item -->
                     <div class="layui-form-item">
                         <label class="layui-form-label">年分内一覧</label>
                         <div class="layui-input-inline">
@@ -88,7 +130,6 @@
                         </div>
                     </div>
 
-                    <!-- Second Row: Two Items Aligned Horizontally -->
                     <div class="layui-form-item layui-row-flex">
                         <div class="layui-inline">
                             <label class="layui-form-label">請求書の作成年月</label>
@@ -104,9 +145,7 @@
                         </div>
                     </div>
 
-                    <!-- Third Row: Two Items Aligned Horizontally -->
                     <div class="layui-form-item layui-row-flex">
-                        <!-- 請求発出方 -->
                         <div class="layui-inline">
                             <label class="layui-form-label">請求の発出方</label>
                             <div class="layui-input-inline">
@@ -118,7 +157,6 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- 請求受けて支払い方 -->
                         <div class="layui-inline">
                             <label class="layui-form-label">請求の支払方</label>
                             <div class="layui-input-inline">
@@ -139,8 +177,6 @@
                     </div>
                 </form>
 
-
-
                 <div class="layui-collapse">
                     <div class="layui-colla-item">
                         <br>
@@ -150,6 +186,8 @@
                         <table class="layui-table">
                             <thead>
                             <tr>
+                                <!-- 添加全选复选框 -->
+                                <th><input type="checkbox" id="select-all" lay-skin="primary" lay-filter="checkAll"></th>
                                 <th>年分内一覧</th>
                                 <th>請求書の作成年月</th>
                                 <th>請求中作業発生年月</th>
@@ -159,8 +197,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <!-- 遍历 rows 中的数据 -->
                             <tr th:each="row : ${rows}">
+                                <!-- 每一行的复选框 -->
+                                <td><input type="checkbox" class="row-checkbox" data-pdf-url="${row.pdfUrl}" lay-skin="primary"></td>
                                 <td th:text="${row.year}">年分内一覧</td>
                                 <td th:text="${row.createMonth}">請求書の作成年月</td>
                                 <td th:text="${row.workMonth}">請求中作業発生年月</td>
@@ -170,6 +209,10 @@
                             </tr>
                             </tbody>
                         </table>
+                        <!-- 批量下载按钮 -->
+                        <div style="text-align: center; margin-top: 10px;">
+                            <button type="button" class="layui-btn" onclick="downloadSelected()">批量下载PDF</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>会社管理システム</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+    <style>
+        #contentDiv {
+            background-image: url('/img/seisoulLogo.png');
+            /*background-color: rgba(0, 40, 168);*/
+            /*background-size: cover;*/
+            background-position: center;
+            background-repeat: no-repeat;
+            /*background-attachment: fixed;*/
+            /*display: flex;*/
+            /*justify-content: center;*/
+            /*align-items: center;*/
+            /*height: 50vh;*/
+            /*margin: 0;*/
+        }
+
+        #explainDiv {
+            background-color: rgba(255, 255, 255,0.8); /* 半透明白色 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            width: 400px;
+            text-align: center;
+            margin: 0 auto; /* 将 div 横向居中 */
+        }
+
+        /* Ensure form labels do not wrap and maintain a fixed width */
+        .layui-form-label {
+            width: 150px; /* Set a fixed width for labels */
+            text-align: right;
+            white-space: nowrap; /* Prevent text wrapping */
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Make sure inputs and selects take the proper width */
+        .layui-input-inline {
+            width: 200px; /* Set a standard width for inputs and selects */
+        }
+
+        /* Maintain spacing between form items */
+        .layui-form-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Container to align two form items on the same row */
+        .layui-row-two-items {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Space between columns */
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="~{header :: header(pageTitle=${pageTitle})}" th:with="pageTitle=${pageTitle}"></div>
+
+    <div th:replace="~{sidebar :: sidebar}"></div>
+
+    <div class="layui-body" id = "contentDiv">
+        <div id="explainDiv">
+            <h1>王正　さん</h1>
+            <h1 style="color: gray">正創株式会社管理システム</h1>
+            <h1 style="color: gray">へようこそ</h1>
+        </div>
+    </div>
+</div>
+</body>
+</html>
