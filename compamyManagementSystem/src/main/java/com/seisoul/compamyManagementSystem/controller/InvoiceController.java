@@ -15,10 +15,6 @@ public class InvoiceController {
     @GetMapping("/invoices")
     public String invoices(Model model) {
         model.addAttribute("pageTitle", "請求書タイトル");
-//        // 模拟一些表格数据
-//        List<TableRow> rows = new ArrayList<>();
-//        rows.add(new TableRow("2023", "2023-01", "2023-02", "A公司", "B公司"));
-//        rows.add(new TableRow("2022", "2022-03", "2022-04", "C公司", "D公司"));
         // 创建模拟数据
         List<InvoiceSearch> rows = new ArrayList<>();
 
@@ -28,7 +24,7 @@ public class InvoiceController {
         row1.setWorkMonth("2023-07");
         row1.setSender("発出方 A");
         row1.setReceiver("支払方 A");
-        row1.setPdfUrl("/pdf/document1.pdf");
+        row1.setPdfUrl("/files/【訂正版】正創株式会社御中_請求書_202403.pdf");
 
         InvoiceSearch row2 = new InvoiceSearch();
         row2.setYear("2023");

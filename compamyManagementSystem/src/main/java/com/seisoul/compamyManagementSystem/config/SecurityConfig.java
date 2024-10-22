@@ -1,4 +1,4 @@
-package com.seisoul.compamyManagementSystem;
+package com.seisoul.compamyManagementSystem.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

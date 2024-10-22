@@ -63,19 +63,34 @@
             });
         });
 
-        // 批量下载选中的文件
+        // 处理批量下载时，编码文件名
         function downloadSelected() {
             var selectedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
             if (selectedCheckboxes.length === 0) {
                 alert('请选择至少一个文件进行下载');
                 return;
             }
-            alert('文件下载');
+
             selectedCheckboxes.forEach(function(checkbox) {
                 var pdfUrl = checkbox.getAttribute('data-pdf-url');
-                console.log('Downloading:', pdfUrl);
-                // 调用下载逻辑，例如：
-                // window.open(pdfUrl, '_blank');
+                if (pdfUrl) {
+                    // 创建一个隐藏的 <a> 元素
+                    var link = document.createElement('a');
+                    link.href = pdfUrl;
+
+                    // 提取文件名，确保它没有被 URL 编码破坏
+                    var fileName = pdfUrl.split("/").pop();
+
+                    // 设置 download 属性，强制下载
+                    link.setAttribute('download', fileName);
+
+                    // 将链接添加到 DOM 并触发点击事件，然后移除链接
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    console.error("PDF URL 为空");
+                }
             });
         }
     </script>
@@ -173,7 +188,7 @@
                         </div>
                     </div>
                     <div style="text-align: center;">
-                        <button type="button" class="layui-btn layui-btn-fluid">検　　索</button>
+                        <button type="button" class="layui-btn layui-btn-fluid" style="width: 10%;background-color: #007bff">検　　索</button>
                     </div>
                 </form>
 
@@ -188,9 +203,8 @@
                             <tr>
                                 <!-- 添加全选复选框 -->
                                 <th><input type="checkbox" id="select-all" lay-skin="primary" lay-filter="checkAll"></th>
-                                <th>年分内一覧</th>
-                                <th>請求書の作成年月</th>
-                                <th>請求中作業発生年月</th>
+                                <th>請求書作成年月</th>
+                                <th>作業発生年月</th>
                                 <th>請求の発出方</th>
                                 <th>請求の支払方</th>
                                 <th>請求書の確認</th>
@@ -199,19 +213,18 @@
                             <tbody>
                             <tr th:each="row : ${rows}">
                                 <!-- 每一行的复选框 -->
-                                <td><input type="checkbox" class="row-checkbox" data-pdf-url="${row.pdfUrl}" lay-skin="primary"></td>
-                                <td th:text="${row.year}">年分内一覧</td>
+                                <td><input type="checkbox" class="row-checkbox" th:data-pdf-url="@{${row.pdfUrl}}" lay-skin="primary"></td>
                                 <td th:text="${row.createMonth}">請求書の作成年月</td>
                                 <td th:text="${row.workMonth}">請求中作業発生年月</td>
                                 <td th:text="${row.sender}">請求の発出方</td>
                                 <td th:text="${row.receiver}">請求の支払方</td>
-                                <td><a th:href="@{/newPageUrl}" target="_blank" style="color: blue; text-decoration: underline;">請求書確認</a></td>
+                                <td><a th:href="${row.pdfUrl}" target="_blank" style="color: blue; text-decoration: underline;">請求書確認</a></td>
                             </tr>
                             </tbody>
                         </table>
                         <!-- 批量下载按钮 -->
-                        <div style="text-align: center; margin-top: 10px;">
-                            <button type="button" class="layui-btn" onclick="downloadSelected()">批量下载PDF</button>
+                        <div style="text-align: left; padding-left: 20px;">
+                            <button type="button" class="layui-btn" onclick="downloadSelected()"style="background-size: 20px">批量下载PDF</button>
                         </div>
                     </div>
                 </div>
