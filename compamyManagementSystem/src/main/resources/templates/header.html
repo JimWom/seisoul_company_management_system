@@ -34,9 +34,23 @@
 
     <!-- 右侧的用户名显示区域 -->
     <div style="color: white; margin-right: 20px;">
-      <!-- 动态显示登录用户名 -->
-      欢迎, <span th:text="${username}">ゲスト</span> さん
+      <a th:href="@{/user/profile}" style="color: white; text-decoration: none;" class="username-link">
+        <span th:text="${username}">ゲスト</span> さん
+      </a>
     </div>
+    <style>
+      .username-link {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .layui-header .username-link:hover {
+        color: #add8e6 !important; /* 使用更高优先级，并增加 !important */
+        cursor: pointer;
+      }
+    </style>
+
   </div>
 </th:block>
 </html>
