@@ -124,13 +124,11 @@
 <div class="layui-layout layui-layout-admin">
     <div th:replace="~{header :: header(pageTitle=${pageTitle})}" th:with="pageTitle=${pageTitle}"></div>
 
-    <div th:replace="~{sidebar :: sidebar}"></div>
-
     <div class="layui-body">
         <blockquote class="layui-elem-quote layui-quote-nm" style="font-weight: bolder;font-size: larger">
             検索条件
         </blockquote>
-        <div class="layui-collapse">
+        <div class="">
             <div class="layui-colla-item">
 
                 <br>
@@ -192,7 +190,7 @@
                     </div>
                 </form>
 
-                <div class="layui-collapse">
+                <div class="">
                     <div class="layui-colla-item">
                         <br>
                         <h3 style="margin-left: 8px"></h3>
@@ -223,7 +221,7 @@
                             </tbody>
                         </table>
                         <!-- 批量下载按钮 -->
-                        <div style="text-align: left; padding-left: 20px;">
+                        <div style="text-align: right; padding-right: 60px;">
                             <button type="button" class="layui-btn" onclick="downloadSelected()"style="background-size: 20px">批量下载PDF</button>
                         </div>
                     </div>

@@ -49,6 +49,7 @@ public class InvoiceController {
 
         // 将数据添加到 Model 中
         model.addAttribute("rows", rows);
+        model.addAttribute("username", "wangzheng");
         return "invoices";
     }
 

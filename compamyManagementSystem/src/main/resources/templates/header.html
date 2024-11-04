@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="header">
-  <div class="layui-header" style="background-color: #2a8edd">
+  <div class="layui-header" style="background-color: #2a8edd; display: flex; justify-content: space-between; align-items: center;">
+    <!-- 左侧的Logo -->
     <div class="layui-logo layui-hide-xs layui-bg-black layui-font-20">正創株式会社</div>
 
-    <!-- 头部区域（可配合layui 已有的水平导航） -->
-    <ul class="layui-nav layui-layout-left">
-      <!-- 移动端显示 -->
-      <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
-        <i class="layui-icon layui-icon-spread-left"></i>
-      </li>
-      <li class="layui-nav-item"><span style="font-size: larger;font-weight: bolder" th:text="${pageTitle}"></span></li>
-    </ul>
-
-    <ul class="layui-nav layui-layout-right">
-      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
-        <a href="javascript:;">
-          <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
-          tester
-        </a>
+    <!-- 中间的导航菜单 -->
+    <ul class="layui-nav" style="background-color: #2a8edd;">
+      <li class="layui-nav-item"><a href="">正創株式会社</a></li>
+      <li class="layui-nav-item">
+        <a href="javascript:;">請求書</a>
         <dl class="layui-nav-child">
-          <dd><a href="javascript:;">Your Profile</a></dd>
-          <dd><a href="javascript:;">Settings</a></dd>
-          <dd><a href="javascript:;">Sign out</a></dd>
+          <dd><a href="/invoices">請求書一覧</a></dd>
+          <dd><a href="/upload-invoice">請求書登録</a></dd>
         </dl>
       </li>
-      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
-        <a href="javascript:;">
-          <i class="layui-icon layui-icon-more-vertical"></i>
-        </a>
+      <li class="layui-nav-item">
+        <a href="javascript:;">BP</a>
+        <dl class="layui-nav-child">
+          <dd><a href="">BP一覧</a></dd>
+          <dd><a href="">BP書登録</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item">
+        <a href="javascript:;">稼働</a>
+        <dl class="layui-nav-child">
+          <dd><a href="">稼働員一覧</a></dd>
+          <dd><a href="">稼働員登録</a></dd>
+          <dd><a href="">稼働履歴</a></dd>
+        </dl>
       </li>
     </ul>
+
+    <!-- 右侧的用户名显示区域 -->
+    <div style="color: white; margin-right: 20px;">
+      <!-- 动态显示登录用户名 -->
+      欢迎, <span th:text="${username}">ゲスト</span> さん
+    </div>
   </div>
 </th:block>
+</html>
