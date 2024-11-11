@@ -2,9 +2,214 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>会社管理システム</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+
+    <style>
+        .layui-form-label {
+            width: 150px;
+            text-align: right;
+            white-space: nowrap;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+        .layui-form-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .layui-input-inline {
+            width: 200px;
+        }
+        /* 自定义文件上传按钮 */
+        .invoice-file-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 15px;
+
+        }
+        /* 上传按钮样式 */
+        .layui-btn-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+        /* 鼠标悬停时的按钮效果 */
+        .invoice-file-label:hover, .layui-btn-upload:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+    <script>
+        layui.use(['laydate', 'form'], function(){
+            var laydate = layui.laydate;
+            var form = layui.form;
+
+            // 年月日选择器
+            laydate.render({
+                elem: '#ID-laydate-type-date',
+                type: 'day'
+            });
+
+            laydate.render({
+                elem: '#ID-laydate-developmental-start-period',
+                type: 'day'
+            });
+
+            laydate.render({
+                elem: '#ID-laydate-developmental-end-period',
+                type: 'day'
+            });
+
+            // 渲染复选框
+            form.render('checkbox');
+        });
+
+        // 确保在 DOM 完全加载后执行 JavaScript 代码
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectinvoiceFileButton = document.getElementById('selectinvoiceFileButton');
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const uploadButton = document.getElementById('uploadButton');
+
+            // 选择文件按钮点击事件，触发文件输入框
+            selectinvoiceFileButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // 当文件选择变化时，显示文件名
+            fileInput.addEventListener('change', function() {
+                const file = fileInput.files[0];
+                if (file) {
+                    fileNameDisplay.textContent = file.name;
+                    uploadButton.disabled = false;  // 启用上传按钮
+                } else {
+                    fileNameDisplay.textContent = "ファイル未選択";
+                    uploadButton.disabled = true;  // 禁用上传按钮
+                }
+            });
+
+            // 上传文件按钮点击事件，实际上传文件
+            uploadButton.addEventListener('click', function() {
+                const formData = new FormData();
+                const file = fileInput.files[0];
+
+                // 获取表单输入字段的值
+                const issueDate = document.getElementById('ID-laydate-type-date').value;
+                const startPeriod = document.getElementById('ID-laydate-developmental-start-period').value;
+                const endPeriod = document.getElementById('ID-laydate-developmental-end-period').value;
+                const issueMethod = document.querySelector('select[name="issueMethod"]').value;
+                const recipient = document.querySelector('select[name="recipient"]').value;
+
+                // 将表单数据和文件一起添加到 FormData
+                formData.append('file', file);
+                formData.append('issueDate', issueDate);
+                formData.append('startPeriod', startPeriod);
+                formData.append('endPeriod', endPeriod);
+                formData.append('issueMethod', issueMethod);
+                formData.append('recipient', recipient);
+
+                // 使用 Fetch API 上传文件和表单数据
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('アップロード成功しました！');
+                })
+                .catch(error => {
+                    alert('アップロード失敗しました！: ' + error.message);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-請求書登録画面
+    <div class="layui-layout layui-layout-admin">
+        <div th:replace="~{header :: header(pageTitle=${pageTitle})}" th:with="pageTitle=${pageTitle}"></div>
+
+        <div class="layui-body">
+            <div style="font-weight: bolder;font-size: larger">
+                請求書登録
+            </div>
+            <div class="layui-upload-item">
+
+                <br>
+                <h3 style="margin-left: 8px"></h3>
+                <br>
+                <!-- 請求書登録部分-->
+                <form class="layui-form layui-row layui-col-space17">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">請求書作成日付</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="ID-laydate-type-date" placeholder="yyyy/MM/DD"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-row-flex">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求書発生期間</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="ID-laydate-developmental-start-period" placeholder="yyyy-MM-DD">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="ID-laydate-developmental-end-period" placeholder="yyyy-MM-DD">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-row-flex">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求の発出方</label>
+                            <div class="layui-input-inline">
+                                <select name="issueMethod">
+                                    <option value="">请选择</option>
+                                    <option value="AAA">選項 A</option>
+                                    <option value="BBB">選項 B</option>
+                                    <option value="CCC">選項 C</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-row-flex">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">請求受取方</label>
+                            <div class="layui-input-inline">
+                                <select name="recipient">
+                                    <option value="">请选择</option>
+                                    <option value="AAA">選項 A</option>
+                                    <option value="BBB">選項 B</option>
+                                    <option value="CCC">選項 C</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-row-flex">
+                        <button type="button" id="selectinvoiceFileButton" class="invoice-file-btn">登録請求書選択</button>
+                        <input type="file" id="fileInput" style="display: none;" name="upload-invoice-file" accept="image/*, .pdf, .txt">
+                        <span id="fileNameDisplay">ファイル未選択</span>
+                        <button type="button" class="layui-btn-upload" id="uploadButton" disabled>登録 </button>
+                    </div>
+                </form>
+
+                <!-- 備考部分-->
+                <div class="label">備考</div>
+                <label class="footnotes">
+                    <textarea rows="10" cols="100" placeholder="備考を入力してください"></textarea>
+                </label>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

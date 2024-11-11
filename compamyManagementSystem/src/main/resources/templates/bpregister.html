@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>会社管理システム</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+    <style>
+    	.layui-form-label {
+            width: 150px;
+            text-align: right;
+            white-space: nowrap;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+    	.layui-form-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        #business-partner-staff,#business-partner-account{
+        position:relative;
+        right:75px
+        }
+    </style>
+    <script>
+ 	// 页面加载后初始化layui的表单
+    layui.use('form', function() {
+      var form = layui.form;
+
+     // 监听选择框变化
+      form.on('radio(relationshipchoice)', function(data){
+          if (data.value === 'others') {
+              // 显示文本框
+              document.getElementById('partner-relationship-input').style.display = 'block';
+          } else {
+              // 隐藏文本框
+              document.getElementById('partner-relationship-input').style.display = 'none';
+          }
+      });
+
+      // 监听按钮点击事件
+      document.querySelector('.layui-btn-register').addEventListener('click', function() {
+          // 获取表单数据
+          var partnerName = document.getElementById('business-partner-name').value;
+          var partnerAddress = document.getElementById('business-partner-address').value;
+          var partnerContactInfo = document.getElementById('business-partner-contactinformation').value;
+          var partnerRelationship = document.getElementById('business-partner-relationship').value;
+          var partnerStaff = document.getElementById('business-partner-staff').value;
+          var partnerAccount = document.getElementById('business-partner-account').value;
+          var partnerDirector = document.getElementById('business-partner-director').value;
+          var partnerURL = document.getElementById('business-partner-url').value;
+
+          // 验证必填字段是否为空
+          if (!partnerName) {
+              layer.msg('取引先名は必須です！');
+              return;
+          }
+          if (!partnerAddress) {
+              layer.msg('取引先住所は必須です！');
+              return;
+          }
+          if (!partnerContactInfo) {
+              layer.msg('取引先連絡先は必須です！');
+              return;
+          }
+          if (!partnerRelationship) {
+              layer.msg('取引先との関係は必須です！');
+              return;
+          }
+          if (!partnerStaff) {
+              layer.msg('取引先担当者は必須です！');
+              return;
+          }
+          if (!partnerAccount) {
+              layer.msg('取引先口座は必須です！');
+              return;
+          }
+          if (!partnerDirector) {
+              layer.msg('取引先代表取締役は必須です！');
+              return;
+          }
+          if (!partnerURL) {
+              layer.msg('取引先URLは必須です！');
+              return;
+          }
+
+          // 如果所有字段都已填写，进行提交
+          var formData = {
+              businessPartnerName: partnerName,
+              businessPartnerAddress: partnerAddress,
+              businessPartnerContactInfo: partnerContactInfo,
+              businessPartnerRelationship: partnerRelationship,
+              businessPartnerStaff: partnerStaff,
+              businessPartnerAccount: partnerAccount,
+              businessPartnerDirector: partnerDirector,
+              businessPartnerURL: partnerURL
+          };
+
+          // 使用 fetch 发送数据到服务器 (这里假设使用POST方法)
+          fetch('/submit-endpoint', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData) // 将数据转换为JSON字符串
+          })
+          .then(response => response.json())  // 假设返回的是JSON数据
+          .then(data => {
+              // 处理服务器返回的结果
+              if (data.success) {
+                  layer.msg('登録成功！');
+                  // 清空表单
+                  document.querySelector('.layui-form').reset();
+              } else {
+                  layer.msg('登録失敗: ' + data.message);
+              }
+          })
+          .catch(error => {
+              console.error('エラー:', error);
+              layer.msg('サーバーエラーが発生しました。');
+          });
+      });
+      // 在页面初始化时调用 form.render() 来渲染表单元素
+      form.render();
+    });
+    </script>
+</head>
+<body>
+	<div class="layui-layout layui-layout-admin">
+		<div th:replace="~{header :: header(pageTitle=${pageTitle})}" th:with="pageTitle=${pageTitle}"></div>
+
+		<div class="layui-body">
+			<div style="font-weight: bolder;font-size: larger">
+	        	BP登録
+	        </div>
+	        <div class="layui-bpregister-item">
+	        	<br>
+                <h3 style="margin-left: 8px"></h3>
+                <br>
+                <!-- BP登録部分-->
+                <form class="layui-form layui-row layui-bp-register">
+                	<div class="layui-form-item">
+                        <label class="layui-form-label">取引先名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="business-partner-name"/>
+                        </div>
+                            <div class="layui-partner-name">
+							  <input type="radio" name="partnerchoice" value="corporate" title="法人">
+							  <input type="radio" name="partnerchoice" value="soloproprietorship" title="個人事業主">
+							</div>
+                    </div>
+                    <div class="layui-form-item">
+                    	<label class="layui-form-label">取引先住所</label>
+	                    	<div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-address" style="width:570px;"/>
+	                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                    	<label class="layui-form-label">取引先連絡先</label>
+                    		携帯
+                    		<div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-contactinformation "/>
+	                        </div>
+	                                                   固定電話
+                    		<div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-contactinformation "/>
+	                        </div>
+	                                                    メール
+                    		<div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-contactinformation "/>
+	                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                    	<label class="layui-form-label">取引先との関係</label>
+                            <div class="layui-partner-relationship">
+							  <input type="radio" name="relationshipchoice" value="maincontractor" title="元請け" lay-filter="relationshipchoice">
+							  <input type="radio" name="relationshipchoice" value="subcontractor" title="下請け" lay-filter="relationshipchoice">
+							  <input type="radio" name="relationshipchoice" value="others" title="その他" lay-filter="relationshipchoice">
+							</div>
+							  <div class="layui-form-item" id="partner-relationship-input" style="display: none;">
+								  <div class="layui-input-inline">
+	                            	<input type="text" class="layui-input" id="other-relationship" style="position:relative;top:10px;"/>
+	                        	  </div>
+	                          </div>
+                    </div>
+                    <div class="layui-form-item">
+						<label class="layui-form-label">取引先担当者</label>
+						   <div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-address"/>
+	                        </div>
+	                     <label class="layui-form-label" style="position=relative;right:75px">役    割</label>
+                            <div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-staff"/>
+	                        </div>
+                    </div>
+                     <div class="layui-form-item">
+                         <label class="layui-form-label">取引先銀行</label>
+						<div class="layui-input-inline">
+	                            <input type="text" class="layui-input" id="business-partner-bank"/>
+	                        </div>
+	                      <label class="layui-form-label" style="position=relative;right:75px">口座番号</label>
+                          <div class="layui-input-inline">
+	                           <input type="text" class="layui-input" id="business-partner-account"/>
+	                       </div>
+                     </div>
+                     <div class="layui-form-item">
+                     	<label class="layui-form-label">取締役</label>
+                     	<div class="layui-input-inline">
+	                         <input type="text" class="layui-input" id="business-partner-director"/>
+	                     </div>
+                     </div>
+                     <div class="layui-form-item">
+                     	<label class="layui-form-label">ホームページURL</label>
+                     	<div class="layui-input-inline">
+	                         <input type="text" class="layui-input" id="business-partner-url" style="width:380px;"/>
+	                     </div>
+                     </div>
+					<div style="text-align: center;">
+                        <button type="button" class="layui-btn layui-btn-register" style="width: 10%;background-color: #007bff;position:relative;left:10.5%;">登　　録</button>
+                    </div>
+                </form>
+                  <!-- 備考部分-->
+                <div class="label"></div>
+                <label class="footnotes">
+                    <textarea rows="10" cols="100" placeholder="備考を入力してください" style="color:lightgray;"></textarea>
+                </label>
+	</div>
+</body>
+</html>
